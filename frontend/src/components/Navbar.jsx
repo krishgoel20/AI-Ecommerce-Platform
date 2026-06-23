@@ -70,6 +70,12 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+            <Link to="/budget-optimizer" className="text-sm text-gray-600 hover:text-gray-900">
+              Budget
+            </Link>
+            <Link to="/occasion-shopping" className="text-sm text-gray-600 hover:text-gray-900">
+              Occasions
+            </Link>
             <Link to="/orders" className="text-sm text-gray-600 hover:text-gray-900">
               Orders
             </Link>

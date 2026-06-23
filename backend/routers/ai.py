@@ -7,6 +7,8 @@ from ai.product_qa import answer_question
 from ai.analytics import generate_analytics_sql
 from ai.recommendations import get_recommendations
 from ai.comparison import compare_products
+from ai.budget_optimizer import optimize_budget
+from ai.occasion_shopping import occasion_shop
 
 router = APIRouter()
 
@@ -24,6 +26,14 @@ class CompareRequest(BaseModel):
     product_id: int
     compare_with: str
     query: Optional[str] = None
+
+class BudgetRequest(BaseModel):
+    budget: float
+    goal: str
+
+class OccasionRequest(BaseModel):
+    occasion: str
+    budget: float = 0
 
 @router.post("/search", summary="NL Search")
 def nl_search(search: SearchQuery):
@@ -171,6 +181,43 @@ def compare(req: CompareRequest):
             "product_b": product_b["name"],
             "comparison": comparison
         }
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/budget-optimize", summary="Budget Optimizer")
+def budget_optimizer(req: BudgetRequest):
+    conn = get_connection()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute("""
+            SELECT p.id, p.name, p.description, p.price, p.stock_qty,
+                   p.rating_avg, pi.image_url
+            FROM products p
+            LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = true
+        """)
+        products = cursor.fetchall()
+        result = optimize_budget(req.budget, req.goal, products)
+        return result
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/occasion-shop", summary="Occasion Shopping")
+def occasion_shopping(req: OccasionRequest):
+    conn = get_connection()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute("""
+            SELECT p.id, p.name, p.description, p.price, p.stock_qty,
+                   p.rating_avg, c.name as category_name, pi.image_url
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = true
+        """)
+        products = cursor.fetchall()
+        result = occasion_shop(req.occasion, req.budget, products)
+        return result
     finally:
         cursor.close()
         conn.close()

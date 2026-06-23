@@ -60,4 +60,10 @@ export const api = {
 
   compareProducts: (product_id, compare_with, query = "") =>
     fetch(`${BASE_URL}/ai/compare`, { method: "POST", headers: headers(), body: JSON.stringify({ product_id, compare_with, query }) }).then((r) => r.json()),
+
+  budgetOptimize: (budget, goal) =>
+    fetch(`${BASE_URL}/ai/budget-optimize`, { method: "POST", headers: headers(), body: JSON.stringify({ budget, goal }) }).then((r) => r.json()),
+
+  occasionShop: (occasion, budget = 0) =>
+    fetch(`${BASE_URL}/ai/occasion-shop`, { method: "POST", headers: headers(), body: JSON.stringify({ occasion, budget }) }).then((r) => r.json()),
 };

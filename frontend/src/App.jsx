@@ -10,6 +10,8 @@ import Analytics from "./pages/Analytics";
 import Payment from "./pages/Payment";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import BudgetOptimizer from "./pages/BudgetOptimizer";
+import OccasionShopping from "./pages/OccasionShopping";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -49,6 +51,14 @@ export default function App() {
           <Route
             path="/payment"
             element={<ProtectedRoute><Payment /></ProtectedRoute>}
+          />
+          <Route
+            path="/budget-optimizer"
+            element={<ProtectedRoute><BudgetOptimizer /></ProtectedRoute>}
+          />
+          <Route
+            path="/occasion-shopping"
+            element={<ProtectedRoute><OccasionShopping /></ProtectedRoute>}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
