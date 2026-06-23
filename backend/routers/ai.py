@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+from typing import Optional
 from database import get_connection, get_cursor
 from ai.nl_search import generate_search_sql
 from ai.product_qa import answer_question
 from ai.analytics import generate_analytics_sql
 from ai.recommendations import get_recommendations
+from ai.comparison import compare_products
 
 router = APIRouter()
 
@@ -17,6 +19,11 @@ class QARequest(BaseModel):
 
 class AnalyticsQuery(BaseModel):
     query: str
+
+class CompareRequest(BaseModel):
+    product_id: int
+    compare_with: str
+    query: Optional[str] = None
 
 @router.post("/search", summary="NL Search")
 def nl_search(search: SearchQuery):
@@ -117,6 +124,53 @@ def recommendations(user_id: int):
             return {"message": "Not enough interaction data yet for recommendations", "recommendations": []}
 
         return {"user_id": user_id, "recommendations": recs}
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/compare", summary="Compare Products")
+def compare(req: CompareRequest):
+    conn = get_connection()
+    cursor = get_cursor(conn)
+    try:
+        cursor.execute(
+            """SELECT p.id, p.name, p.description, p.price, p.stock_qty,
+                      p.rating_avg, p.rating_count
+               FROM products p
+               WHERE p.id = %s""",
+            (req.product_id,)
+        )
+        product_a = cursor.fetchone()
+        if not product_a:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+        cursor.execute(
+            """SELECT p.id, p.name, p.description, p.price, p.stock_qty,
+                      p.rating_avg, p.rating_count
+               FROM products p
+               WHERE p.name LIKE %s
+               LIMIT 1""",
+            (f"%{req.compare_with}%",)
+        )
+        product_b = cursor.fetchone()
+        if not product_b:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Could not find a product matching '{req.compare_with}'. Try a different name."
+            )
+
+        if product_a["id"] == product_b["id"]:
+            raise HTTPException(
+                status_code=400,
+                detail="Please compare with a different product."
+            )
+
+        comparison = compare_products(product_a, product_b, req.query or "")
+        return {
+            "product_a": product_a["name"],
+            "product_b": product_b["name"],
+            "comparison": comparison
+        }
     finally:
         cursor.close()
         conn.close()

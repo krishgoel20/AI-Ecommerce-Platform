@@ -13,6 +13,11 @@ export default function ProductDetail() {
   const [asking, setAsking] = useState(false);
   const [adding, setAdding] = useState(false);
   const [listening, setListening] = useState(false);
+  const [compareWith, setCompareWith] = useState("");
+  const [compareQuery, setCompareQuery] = useState("");
+  const [comparing, setComparing] = useState(false);
+  const [comparison, setComparison] = useState(null);
+  const [compareError, setCompareError] = useState("");
 
   useEffect(() => {
     api.getProduct(id).then(setProduct);
@@ -102,6 +107,21 @@ export default function ProductDetail() {
     const res = await api.productQA(product.id, question);
     setAnswer(res.answer || "Could not get an answer.");
     setAsking(false);
+  };
+
+  const handleCompare = async (e) => {
+    e.preventDefault();
+    if (!compareWith.trim()) return;
+    setComparing(true);
+    setComparison(null);
+    setCompareError("");
+    const res = await api.compareProducts(product.id, compareWith, compareQuery);
+    if (res.comparison) {
+      setComparison(res);
+    } else {
+      setCompareError(res.detail || "Could not compare products. Try a different name.");
+    }
+    setComparing(false);
   };
 
   if (!product)
@@ -267,6 +287,60 @@ export default function ProductDetail() {
         {answer && (
           <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 leading-relaxed">
             {answer}
+          </div>
+        )}
+      </div>
+
+      {/* Comparison Assistant */}
+      <div className="bg-gray-50 rounded-2xl p-6 mt-6">
+        <h2 className="text-base font-semibold text-gray-900 mb-1"> Compare with another product </h2>
+        <p className="text-sm text-gray-500 mb-4"> Type a product name and the AI will generate a side-by-side comparison </p>
+        <form onSubmit={handleCompare} className="flex flex-col gap-3 mb-4">
+          <input
+            type="text"
+            value={compareWith}
+            onChange={(e) => setCompareWith(e.target.value)}
+            placeholder='e.g. "Laptop" or "Sony WH-1000XM5"'
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-gray-400 bg-white"
+          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={compareQuery}
+              onChange={(e) => setCompareQuery(e.target.value)}
+              placeholder='Optional: "which is better for travel?" (leave blank for general comparison)'
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-gray-400 bg-white"
+            />
+            <button
+              type="submit"
+              disabled={comparing || !compareWith.trim()}
+              className="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-700 disabled:opacity-50 whitespace-nowrap"
+            >
+              {comparing ? "Comparing..." : "Compare"}
+            </button>
+          </div>
+        </form>
+
+        {compareError && (
+          <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
+            {compareError}
+          </div>
+        )}
+
+        {comparison && (
+          <div className="bg-white border border-gray-200 rounded-xl p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-medium bg-gray-900 text-white px-2.5 py-1 rounded-full">
+                {comparison.product_a}
+              </span>
+              <span className="text-xs text-gray-400">vs</span>
+              <span className="text-xs font-medium bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                {comparison.product_b}
+              </span>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+              {comparison.comparison}
+            </p>
           </div>
         )}
       </div>

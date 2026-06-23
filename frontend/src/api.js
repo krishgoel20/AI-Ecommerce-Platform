@@ -57,4 +57,7 @@ export const api = {
 
   getRecommendations: (user_id) =>
     fetch(`${BASE_URL}/ai/recommendations?user_id=${user_id}`, { headers: headers() }).then((r) => r.json()),
+
+  compareProducts: (product_id, compare_with, query = "") =>
+    fetch(`${BASE_URL}/ai/compare`, { method: "POST", headers: headers(), body: JSON.stringify({ product_id, compare_with, query }) }).then((r) => r.json()),
 };
