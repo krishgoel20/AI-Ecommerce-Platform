@@ -14,6 +14,9 @@ Most E-commerce platforms use keyword search and fixed analytics dashboards. Sho
 | **Product Q&A** | Crowdsourced human answers | Instant RAG-based answers from product data |
 | **Analytics** | Fixed predefined reports | Ask any business question in plain English |
 | **Recommendations** | Black-box algorithm | Collaborative filtering + LLM explanation |
+| **Comparison** | Manual side-by-side research | AI generates structured comparison instantly |
+| **Budget Planning** | Manual cart building | AI curates optimal cart within budget |
+| **Gift shopping** | Category browsing | AI understands occasion context and intent |
 
 ---
 
@@ -24,6 +27,9 @@ Most E-commerce platforms use keyword search and fixed analytics dashboards. Sho
 - **RAG Product Q&A** — Ask questions about any product and get grounded answers from the actual product description using FAISS + LLaMA. Includes voice input support
 - **NL Analytics Dashboard** — Admin asks business questions in plain English; LLaMA generates multi-table SQL and returns real-time results
 - **AI Recommendations** — Collaborative filtering surfaces relevant products with a natural language explanation of why they're recommended
+- **Comparison Assistant** — Compare any 2 products with AI-generated analysis covering price, features, ratings, and a clear recommendation
+- **Budget Optimizer** — Enter a budget and shopping goal; AI curates the best possible cart that maximizes value within the budget
+- **Occasion-based Shopping** — Describe an occasion (*"birthday gift for a 10-year old"*, *"housewarming gift"*) and AI selects contextually appropriate products with reasons
 
 ### E-commerce Features
 - **Category browsing** — 9 product categories with emoji navigation
@@ -78,16 +84,19 @@ ShopMind/
 │   │   ├── auth.py              # Register, login, forgot/reset password
 │   │   ├── products.py          # Product CRUD + variants
 │   │   ├── cart.py              # Cart management
-│   │   ├── orders.py            # Order placement + history
+│   │   ├── orders.py            # Order placement + history + e-mail
 │   │   ├── categories.py        # Category listing
-│   │   └── ai.py                # All AI endpoints
+│   │   └── ai.py                # All 7 AI endpoints
 │   ├── schemas/
 │   │   └── models.py            # Pydantic schemas
 │   ├── ai/
 │   │   ├── nl_search.py         # Natural language → SQL search
 │   │   ├── product_qa.py        # FAISS + RAG Q&A
 │   │   ├── analytics.py         # NL business analytics
-│   │   └── recommendations.py   # Collaborative filtering
+│   │   ├── recommendations.py   # Collaborative filtering
+│   │   ├── comparison.py        # AI product comparison
+│   │   ├── budget_optimizer.py  # Budget-constrained cart building
+│   │   ├── occasion_shopping.py # Occasion-aware product curation
 │   └── utils/
 │       └── email.py             # Order confirmation + password reset e-mails
 └── frontend/
@@ -98,14 +107,16 @@ ShopMind/
         │   ├── Navbar.jsx       # Sticky nav with live cart badge
         │   └── ProductCard.jsx  # Product grid card
         └── pages/
-            ├── Home.jsx         # Category browsing + NL search + recommendations
-            ├── ProductDetail.jsx # Product page + variant selector + voice Q&A
-            ├── Cart.jsx         # Cart with quantity controls
-            ├── Payment.jsx      # Payment methods + order summary
-            ├── Orders.jsx       # Order history + tracking timeline
-            ├── Analytics.jsx    # Admin NL analytics dashboard
-            ├── Login.jsx        # Login + guest access
-            ├── Register.jsx     # Customer registration
+            ├── Home.jsx              # Category browsing + NL search + recommendations
+            ├── ProductDetail.jsx     # Product page + variants + voice Q&A + comparison
+            ├── Cart.jsx              # Cart with quantity controls
+            ├── Payment.jsx           # Payment methods + order summary
+            ├── Orders.jsx            # Order history + tracking timeline
+            ├── Analytics.jsx         # Admin NL analytics dashboard
+            ├── BudgetOptimizer.jsx   # AI budget-based cart builder
+            ├── OccasionShopping.jsx  # AI occasion-aware shopping
+            ├── Login.jsx             # Login + guest access
+            ├── Register.jsx          # Customer registration
             ├── ForgotPassword.jsx
             └── ResetPassword.jsx
 ```
@@ -114,7 +125,7 @@ ShopMind/
 
 ## Database Schema
 
-11 core tables:
+12 core tables:
 
 ```
 users              — customer accounts with role (admin/customer)
@@ -231,6 +242,9 @@ App runs at `http://localhost:5173`.
 | POST | `/api/ai/qa` | RAG product Q&A |
 | POST | `/api/ai/analytics` | NL business analytics (admin only) |
 | GET | `/api/ai/recommendations` | Collaborative filtering recommendations |
+| POST | `/api/ai/compare` | AI product comparison |
+| POST | `/api/ai/budget-optimize` | Budget-constrained cart building |
+| POST | `/api/ai/occasion-shop` | Occasion-aware product curation |
 
 ---
 
