@@ -50,23 +50,16 @@ Most E-commerce platforms use keyword search and fixed analytics dashboards. Sho
 
 ## Tech Stack
 
-### Backend
 | Layer | Technology |
 |---|---|
-| Framework | FastAPI (Python) |
+| Frontend | React 18, Vite, Tailwind CSS v4, React Router v6 |
+| Backend | Python, FastAPI |
 | Database | MySQL 8.0 |
+| AI / LLM | Groq API (`llama-3.3-70b-versatile`) |
+| Embeddings | `sentence-transformers` — `all-MiniLM-L6-v2` |
 | Vector store | FAISS |
-| Embeddings | sentence-transformers (`all-MiniLM-L6-v2`) |
-| LLM provider | Groq API (`llama-3.3-70b-versatile`) |
-| Auth | JWT via `python-jose`, bcrypt |
+| Auth | JWT (`python-jose`), bcrypt |
 | E-mail | Gmail SMTP (`smtplib`) |
-
-### Frontend
-| Layer | Technology |
-|---|---|
-| Framework | React 18 + Vite |
-| Styling | Tailwind CSS v4 |
-| Routing | React Router v6 |
 | Voice input | Web Speech API |
 
 ---
@@ -153,14 +146,23 @@ password_reset_tokens — secure token-based password reset
 - Groq API key ([console.groq.com](https://console.groq.com))
 - Gmail account with App Password enabled
 
-### Backend
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/krishgoel20/AI-Ecommerce-Platform.git
+cd AI-Ecommerce-Platform
+```
+
+### 2. Set up the backend
 
 ```bash
 cd backend
 python -m venv venv
-.\venv\Scripts\activate
+venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+### 3. Configure environment variables
 
 Create a `.env` file inside the `backend/` folder:
 
@@ -171,30 +173,32 @@ DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=ecommerce_db
 
-SECRET_KEY=your-secret-key
+SECRET_KEY=your-secret-key-here
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=10080
 
 GROQ_API_KEY=your_groq_api_key
 GMAIL_USER=your_gmail@gmail.com
-GMAIL_APP_PASSWORD=your_app_password
+GMAIL_APP_PASSWORD=your_16_char_app_password
 ```
+
+### 4. Run the backend
 
 Run the database schema:
 
 ```bash
-mysql -u root -p < backend/ecommerce_schema.sql
+mysql -u root -p < ecommerce_schema.sql
 ```
 
-Start the server:
+Start the backend:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-API docs available at `http://127.0.0.1:8000/docs`.
+API runs at `http://127.0.0.1:8000` - interactive docs available at `/docs`.
 
-### Frontend
+### 5. Open the frontend
 
 ```bash
 cd frontend
@@ -203,6 +207,13 @@ npm run dev
 ```
 
 App runs at `http://localhost:5173`.
+
+### 6. Demo Credentials
+
+| Role | E-mail | Password |
+|---|---|---|
+| Admin | admin@shopmind.com | Admin@123 |
+| Customer | Register at `/register` | — |
 
 ---
 
@@ -248,11 +259,27 @@ App runs at `http://localhost:5173`.
 
 ---
 
-## Credentials (Demo)
+## Key Concepts Demonstrated
 
-| Role | E-mail | Password |
-|---|---|---|
-| Admin | admin@shopmind.com | Admin@123 |
-| Customer | (register via /register) | — |
+- **RAG (Retrieval-Augmented Generation)** — Product Q&A fetches the actual product description from the database and injects it as context into the LLM prompt, ensuring answers are grounded in real data rather than hallucinated from training knowledge.
+- **Text-to-SQL** — Both NL Search and the Analytics Dashboard convert natural language to MySQL queries using LLaMA. A safety validator strips non-SELECT statements before execution. The analytics endpoint handles multi-table joins spanning orders, products and users.
+- **Collaborative Filtering** — `user_interactions` tracks every meaningful engagement event. The recommendation engine finds users with similar interaction histories and scores products they've engaged with that the target user hasn't seen.
+- **JWT Role-based Access Control** — Tokens carry a `role` field (`admin` or `customer`). The frontend decodes this client-side to conditionally render navigation. The backend enforces it server-side via a `require_admin` FastAPI dependency.
+- **Structured LLM Output** — Budget Optimizer and Occasion Shopping prompt LLaMA to return strict JSON with product IDs, quantities and reasons. The backend parses and validates this before returning it to the frontend, enabling dynamic UI rendering from AI output.
+- **Background Threading** — Order confirmation emails are sent in a `daemon=True` background thread so the payment response returns immediately without waiting for SMTP.
+- **Secure Password Reset** — Reset tokens are generated with `secrets.token_urlsafe(32)`, stored with a 1-hour expiry and a `used` boolean. Once consumed, the token cannot be reused.
+- **Product Variants with Price Modifiers** — The `product_variants` table stores `price_modifier` values that adjust the base price dynamically. The cart and order system correctly stores and displays the variant-adjusted price at purchase time.
+
+---
+
+## Limitations
+
+- **No real payment processing** — The payment flow is simulated. No actual money moves. Integrating Razorpay or Stripe would require business verification.
+- **No cloud deployment** — The app runs locally only. Backend and frontend both require local servers to be running.
+- **Product images are stock photos** — Images are sourced from Unsplash and don't represent actual products. A production app would use manufacturer-provided or studio-photographed images.
+- **Collaborative filtering requires data** — The recommendation engine needs meaningful `user_interactions` data to surface results. With a fresh database, it returns empty recommendations.
+- **FAISS index is in-memory** — The product Q&A vector index is built at runtime and lost on server restart. Calling `/api/ai/index-products` rebuilds it. A production system would persist the index to disk.
+- **LLM responses are non-deterministic** — SQL generated by LLaMA may occasionally produce unexpected queries. The safety validator blocks destructive operations but edge cases in query structure are possible.
+- **No order cancellation or returns** — The order status enum supports `cancelled` but no cancellation flow is implemented in the frontend.
 
 ---
