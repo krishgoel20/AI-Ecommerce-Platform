@@ -125,36 +125,36 @@ LLaMA generates multi-table SQL → MySQL executes → results table displayed
 ```
 ShopMind/
 ├── backend/
-│   ├── main.py                  # FastAPI entry point
-│   ├── database.py              # MySQL connection
-│   ├── config.py                # Environment variables
+│   ├── main.py                       # FastAPI entry point
+│   ├── database.py                   # MySQL connection
+│   ├── config.py                     # Environment variables
 │   ├── requirements.txt
 │   ├── routers/
-│   │   ├── auth.py              # Register, login, forgot/reset password
-│   │   ├── products.py          # Product CRUD + variants
-│   │   ├── cart.py              # Cart management
-│   │   ├── orders.py            # Order placement + history + e-mail
-│   │   ├── categories.py        # Category listing
-│   │   └── ai.py                # AI endpoints
+│   │   ├── auth.py                   # Register, login, forgot/reset password
+│   │   ├── products.py               # Product CRUD + variants
+│   │   ├── cart.py                   # Cart management
+│   │   ├── orders.py                 # Order placement + history + e-mail
+│   │   ├── categories.py             # Category listing
+│   │   └── ai.py                     # AI endpoints
 │   ├── schemas/
-│   │   └── models.py            # Pydantic schemas
+│   │   └── models.py                 # Pydantic schemas
 │   ├── ai/
-│   │   ├── nl_search.py         # Natural language → SQL search
-│   │   ├── product_qa.py        # FAISS + RAG Q&A
-│   │   ├── analytics.py         # NL business analytics
-│   │   ├── recommendations.py   # Collaborative filtering
-│   │   ├── comparison.py        # AI product comparison
-│   │   ├── budget_optimizer.py  # Budget-constrained cart building
-│   │   ├── occasion_shopping.py # Occasion-aware product curation
+│   │   ├── nl_search.py              # Natural language → SQL search
+│   │   ├── product_qa.py             # FAISS + RAG Q&A
+│   │   ├── analytics.py              # NL business analytics
+│   │   ├── recommendations.py        # Collaborative filtering
+│   │   ├── comparison.py             # AI product comparison
+│   │   ├── budget_optimizer.py       # Budget-constrained cart building
+│   │   ├── occasion_shopping.py      # Occasion-aware product curation
 │   └── utils/
-│       └── email.py             # Order confirmation + Password reset e-mails
+│       └── email.py                  # Order confirmation + Password reset e-mails
 └── frontend/
     └── src/
-        ├── api.js               # Centralised API client
-        ├── App.jsx              # Routes + role-based access
+        ├── api.js                    # Centralised API client
+        ├── App.jsx                   # Routes + role-based access
         ├── components/
-        │   ├── Navbar.jsx       # Sticky nav with live cart badge
-        │   └── ProductCard.jsx  # Product grid card
+        │   ├── Navbar.jsx            # Sticky nav with live cart badge
+        │   └── ProductCard.jsx       # Product grid card
         └── pages/
             ├── Home.jsx              # Category browsing + NL search + recommendations
             ├── ProductDetail.jsx     # Product variants + voice Q&A + comparison
@@ -166,8 +166,8 @@ ShopMind/
             ├── OccasionShopping.jsx  # AI occasion-aware shopping
             ├── Login.jsx             # Login + guest access
             ├── Register.jsx          # Customer registration
-            ├── ForgotPassword.jsx
-            └── ResetPassword.jsx
+            ├── ForgotPassword.jsx    # E-mail based reset request
+            └── ResetPassword.jsx     # Token-validated password update
 ```
 
 ---
