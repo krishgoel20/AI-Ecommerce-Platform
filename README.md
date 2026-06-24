@@ -1,12 +1,35 @@
 # ShopMind 🛍️
 
-A full-stack AI-native E-commerce platform where natural language is the primary interface — search, product Q&A, business analytics and recommendations are all powered by LLMs instead of traditional keyword matching.
+A full-stack AI-native E-commerce platform where natural language is the primary interface — a real product with multiple AI features, a complete shopping flow, and role-based access.
+
+---
+
+## What it does
+
+**For customers:**
+- Browse products across categories with product variant selection (size, weight, volume, etc.)
+- Search in plain English — *"wireless headphones under ₹5000"* — and get SQL-powered results
+- Ask questions about any product and get instant AI answers grounded in the product description (with voice input support)
+- Get AI-generated product comparisons — *"Compare this with the Laptop"*
+- Use the Budget Optimizer — enter a budget and goal, AI builds the best cart
+- Use Occasion-based Shopping — describe an occasion (*"birthday gift for a 10-year-old"*), AI curates a tailored product list with reasons
+- Add to cart, adjust quantities, choose a payment method, and place orders
+- Receive an HTML e-mail receipt with order summary and tracking status
+- Reset forgotten passwords via a secure e-mail link
+
+**For admins:**
+- Ask business questions in plain English — *"What is the total revenue from all orders?"* — and get real-time SQL-powered answers
+- Full access to all customer features plus the analytics dashboard
+
+**For guests:**
+- Browse products and search without creating an account
+- Prompted to sign-in only when adding to cart
 
 ---
 
 ## What makes ShopMind different
 
-Most E-commerce platforms use keyword search and fixed analytics dashboards. ShopMind replaces these with a conversational AI layer:
+Most e-commerce platforms use keyword search and fixed analytics dashboards. ShopMind replaces these with a conversational AI layer:
 
 | Feature | Traditional approach | ShopMind |
 |---|---|---|
@@ -19,6 +42,81 @@ Most E-commerce platforms use keyword search and fixed analytics dashboards. Sho
 | **Gift shopping** | Category browsing | AI understands occasion context and intent |
 
 ---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS v4, React Router v6 |
+| Backend | Python, FastAPI |
+| Database | MySQL 8.0 |
+| AI / LLM | Groq API (`llama-3.3-70b-versatile`) |
+| Embeddings | `sentence-transformers` — `all-MiniLM-L6-v2` |
+| Vector store | FAISS |
+| Auth | JWT (`python-jose`), bcrypt |
+| E-mail | Gmail SMTP (`smtplib`) |
+| Voice input | Web Speech API |
+
+---
+
+## How it works
+
+```
+User visits ShopMind
+        ↓
+Auth check
+        ├── Guest → browse and search only (prompted to login on cart add)
+        └── Login/Register → full access
+        ↓
+Home page loads
+        ├── Collaborative filtering scores user_interactions table
+        └── LLaMA generates recommendation explanation → shown on home page
+        ↓
+User types plain English query into search bar
+        ↓
+LLaMA converts query to MySQL SELECT statement
+        ↓
+Safety validator checks for destructive keywords (DROP, DELETE, UPDATE)
+        ↓
+MySQL executes query → matching products returned as cards
+        ↓
+User clicks a product → product detail page
+        ↓
+Variant selector loads (size / weight / volume) → price adjusts dynamically
+        ↓
+[Optional] User asks a question (typed or voice via Web Speech API)
+        ↓
+Product description fetched from MySQL → injected into LLaMA prompt (RAG)
+        ↓
+LLaMA generates grounded answer → displayed below question input
+        ↓
+[Optional] User compares with another product
+        ↓
+Both products fetched → LLaMA generates structured comparison
+        ↓
+User adds to cart → cart_items saved with variant_id and variant_info
+        ↓
+[Optional] Budget Optimizer → budget + goal → LLaMA curates cart within budget
+[Optional] Occasion Shopping → occasion description → LLaMA curates by intent
+        ↓
+Cart page → quantities adjusted (−/+) → shipping address entered
+        ↓
+Payment page → UPI / Card / Net Banking / COD selected
+        ↓
+Pay button → 2-second processing simulation
+        ↓
+Order placed → orders + order_items written to MySQL
+        ↓
+E-mail receipt sent via Gmail SMTP in background thread
+        ↓
+Success screen → redirects to Orders page
+        ↓
+Orders page → visual timeline (Placed → Processing → Shipped → Delivered)
+        ↓
+[Admin only] Analytics page → plain English question
+        ↓
+LLaMA generates multi-table SQL → MySQL executes → results table displayed
+```
 
 ## Features
 
@@ -48,22 +146,6 @@ Most E-commerce platforms use keyword search and fixed analytics dashboards. Sho
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, Vite, Tailwind CSS v4, React Router v6 |
-| Backend | Python, FastAPI |
-| Database | MySQL 8.0 |
-| AI / LLM | Groq API (`llama-3.3-70b-versatile`) |
-| Embeddings | `sentence-transformers` — `all-MiniLM-L6-v2` |
-| Vector store | FAISS |
-| Auth | JWT (`python-jose`), bcrypt |
-| E-mail | Gmail SMTP (`smtplib`) |
-| Voice input | Web Speech API |
-
----
-
 ## Project Structure
 
 ```
@@ -79,7 +161,7 @@ ShopMind/
 │   │   ├── cart.py              # Cart management
 │   │   ├── orders.py            # Order placement + history + e-mail
 │   │   ├── categories.py        # Category listing
-│   │   └── ai.py                # All 7 AI endpoints
+│   │   └── ai.py                # AI endpoints
 │   ├── schemas/
 │   │   └── models.py            # Pydantic schemas
 │   ├── ai/
@@ -91,7 +173,7 @@ ShopMind/
 │   │   ├── budget_optimizer.py  # Budget-constrained cart building
 │   │   ├── occasion_shopping.py # Occasion-aware product curation
 │   └── utils/
-│       └── email.py             # Order confirmation + password reset e-mails
+│       └── email.py             # Order confirmation + Password reset e-mails
 └── frontend/
     └── src/
         ├── api.js               # Centralised API client
@@ -101,10 +183,10 @@ ShopMind/
         │   └── ProductCard.jsx  # Product grid card
         └── pages/
             ├── Home.jsx              # Category browsing + NL search + recommendations
-            ├── ProductDetail.jsx     # Product page + variants + voice Q&A + comparison
+            ├── ProductDetail.jsx     # Product variants + voice Q&A + comparison
             ├── Cart.jsx              # Cart with quantity controls
             ├── Payment.jsx           # Payment methods + order summary
-            ├── Orders.jsx            # Order history + tracking timeline
+            ├── Orders.jsx            # Order history with tracking timeline
             ├── Analytics.jsx         # Admin NL analytics dashboard
             ├── BudgetOptimizer.jsx   # AI budget-based cart builder
             ├── OccasionShopping.jsx  # AI occasion-aware shopping
@@ -266,7 +348,7 @@ App runs at `http://localhost:5173`.
 - **Collaborative Filtering** — `user_interactions` tracks every meaningful engagement event. The recommendation engine finds users with similar interaction histories and scores products they've engaged with that the target user hasn't seen.
 - **JWT Role-based Access Control** — Tokens carry a `role` field (`admin` or `customer`). The frontend decodes this client-side to conditionally render navigation. The backend enforces it server-side via a `require_admin` FastAPI dependency.
 - **Structured LLM Output** — Budget Optimizer and Occasion Shopping prompt LLaMA to return strict JSON with product IDs, quantities and reasons. The backend parses and validates this before returning it to the frontend, enabling dynamic UI rendering from AI output.
-- **Background Threading** — Order confirmation emails are sent in a `daemon=True` background thread so the payment response returns immediately without waiting for SMTP.
+- **Background Threading** — Order confirmation e-mails are sent in a `daemon=True` background thread so the payment response returns immediately without waiting for SMTP.
 - **Secure Password Reset** — Reset tokens are generated with `secrets.token_urlsafe(32)`, stored with a 1-hour expiry and a `used` boolean. Once consumed, the token cannot be reused.
 - **Product Variants with Price Modifiers** — The `product_variants` table stores `price_modifier` values that adjust the base price dynamically. The cart and order system correctly stores and displays the variant-adjusted price at purchase time.
 
