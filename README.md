@@ -252,7 +252,7 @@ Start the backend:
 uvicorn main:app --reload
 ```
 
-API runs at `http://127.0.0.1:8000` - interactive docs available at `/docs`.
+API runs at `http://127.0.0.1:8000` — interactive docs available at `/docs`.
 
 ### 5. Open the frontend
 
