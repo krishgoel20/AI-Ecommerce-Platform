@@ -177,17 +177,17 @@ ShopMind/
 12 core tables:
 
 ```
-users              — customer accounts with role (admin/customer)
-categories         — product categories with self-referencing parent
-products           — product catalog with rating denormalisation
-product_images     — multiple images per product, primary flag
-product_variants   — size/weight/volume/colour options with price modifiers
-cart               — one cart per user
-cart_items         — items in cart with variant reference
-orders             — order snapshots with status enum
-order_items        — line items with price locked at purchase time
-reviews            — one review per user per product
-user_interactions  — view/cart/wishlist/purchase events for recommendations
+users                 — customer accounts with role (admin/customer)
+categories            — product categories with self-referencing parent
+products              — product catalog with rating denormalisation
+product_images        — multiple images per product, primary flag
+product_variants      — size/weight/volume/colour options with price modifiers
+cart                  — one cart per user
+cart_items            — items in cart with variant reference
+orders                — order snapshots with status enum
+order_items           — line items with price locked at purchase time
+reviews               — one review per user per product
+user_interactions     — view/cart/wishlist/purchase events for recommendations
 password_reset_tokens — secure token-based password reset
 ```
  
