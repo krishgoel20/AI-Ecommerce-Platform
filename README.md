@@ -149,25 +149,25 @@ ShopMind/
 │   └── utils/
 │       └── email.py                  # Order confirmation + Password reset e-mails
 └── frontend/
-    └── src/
-        ├── api.js                    # Centralised API client
-        ├── App.jsx                   # Routes + role-based access
-        ├── components/
-        │   ├── Navbar.jsx            # Sticky nav with live cart badge
-        │   └── ProductCard.jsx       # Product grid card
-        └── pages/
-            ├── Home.jsx              # Category browsing + NL search + recommendations
-            ├── ProductDetail.jsx     # Product variants + voice Q&A + comparison
-            ├── Cart.jsx              # Cart with quantity controls
-            ├── Payment.jsx           # Payment methods + order summary
-            ├── Orders.jsx            # Order history with tracking timeline
-            ├── Analytics.jsx         # Admin NL analytics dashboard
-            ├── BudgetOptimizer.jsx   # AI budget-based cart builder
-            ├── OccasionShopping.jsx  # AI occasion-aware shopping
-            ├── Login.jsx             # Login + guest access
-            ├── Register.jsx          # Customer registration
-            ├── ForgotPassword.jsx    # E-mail based reset request
-            └── ResetPassword.jsx     # Token-validated password update
+│   └── src/
+│       ├── api.js                    # Centralised API client
+│       ├── App.jsx                   # Routes + role-based access
+│       ├── components/
+│       │   ├── Navbar.jsx            # Sticky nav with live cart badge
+│       │   └── ProductCard.jsx       # Product grid card
+│       └── pages/
+│           ├── Home.jsx              # Category browsing + NL search + recommendations
+│           ├── ProductDetail.jsx     # Product variants + voice Q&A + comparison
+│           ├── Cart.jsx              # Cart with quantity controls
+│           ├── Payment.jsx           # Payment methods + order summary
+│           ├── Orders.jsx            # Order history with tracking timeline
+│           ├── Analytics.jsx         # Admin NL analytics dashboard
+│           ├── BudgetOptimizer.jsx   # AI budget-based cart builder
+│           ├── OccasionShopping.jsx  # AI occasion-aware shopping
+│           ├── Login.jsx             # Login + guest access
+│           ├── Register.jsx          # Customer registration
+│           ├── ForgotPassword.jsx    # E-mail based reset request
+│           └── ResetPassword.jsx     # Token-validated password update
 ```
 
 ---
