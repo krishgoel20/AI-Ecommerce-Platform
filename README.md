@@ -27,7 +27,7 @@ A full-stack AI-native E-commerce platform where natural language is the primary
 
 ---
 
-## What makes ShopMind different
+## What makes it different
 
 Most e-commerce platforms use keyword search and fixed analytics dashboards. ShopMind replaces these with a conversational AI layer:
 
