@@ -147,7 +147,7 @@ ShopMind/
 │   │   ├── budget_optimizer.py       # Budget-constrained cart building
 │   │   ├── occasion_shopping.py      # Occasion-aware product curation
 │   └── utils/
-│       └── email.py                  # Order confirmation + Password reset e-mails
+│   │   └── email.py                  # Order confirmation + Password reset e-mails
 └── frontend/
 │   └── src/
 │   │   ├── api.js                    # Centralised API client
