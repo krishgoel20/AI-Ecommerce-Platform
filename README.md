@@ -174,7 +174,7 @@ ShopMind/
 
 ## Database Schema
 
-12 core tables:
+12 core tables :
 
 ```
 users                 — customer accounts with role (admin/customer)
