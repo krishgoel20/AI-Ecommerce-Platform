@@ -275,29 +275,29 @@ App runs at `http://localhost:5173`.
 
 ## Features
 
-### AI Features
-- **Natural Language Search** — Type queries like *"wireless headphones under ₹5000 with noise cancellation"* and LLaMA generates the SQL query dynamically
-- **RAG Product Q&A** — Ask questions about any product and get grounded answers from the actual product description using FAISS + LLaMA. Includes voice input support
-- **NL Analytics Dashboard** — Admin asks business questions in plain English; LLaMA generates multi-table SQL and returns real-time results
-- **AI Recommendations** — Collaborative filtering surfaces relevant products with a natural language explanation of why they're recommended
-- **Comparison Assistant** — Compare any 2 products with AI-generated analysis covering price, features, ratings, and a clear recommendation
-- **Budget Optimizer** — Enter a budget and shopping goal; AI curates the best possible cart that maximizes value within the budget
-- **Occasion-based Shopping** — Describe an occasion (*"birthday gift for a 10-year old"*, *"housewarming gift"*) and AI selects contextually appropriate products with reasons
+### 🧠 AI Features
+- 🔍 **Natural language search** — Type queries like *"wireless headphones under ₹5000 with noise cancellation"* and LLaMA generates the SQL query dynamically
+- 💬 **RAG product Q&A** — Ask questions about any product and get grounded answers from the actual product description using FAISS + LLaMA. Includes voice input support
+- 📊 **NL analytics dashboard** — Admin asks business questions in plain English; LLaMA generates multi-table SQL and returns real-time results
+- ✨ **AI recommendations** — Collaborative filtering surfaces relevant products with a natural language explanation of why they're recommended
+- ⚖️ **Comparison assistant** — Compare any 2 products with AI-generated analysis covering price, features, ratings, and a clear recommendation
+- 💰 **Budget optimizer** — Enter a budget and shopping goal; AI curates the best possible cart that maximizes value within the budget
+- 🎁 **Occasion-based shopping** — Describe an occasion (*"birthday gift for a 10-year old"*, *"housewarming gift"*) and AI selects contextually appropriate products with reasons
 
-### E-commerce Features
-- **Category browsing** — 9 product categories with emoji navigation
-- **Product variants** — Size, weight, volume, colour selectors with dynamic price adjustment
-- **Cart management** — Quantity controls (−/+), real-time badge count, variant info
-- **Checkout & Payments** — UPI, Credit/Debit Card, Net Banking, and Cash on Delivery simulation
-- **Order tracking** — Visual timeline (Placed → Processing → Shipped → Delivered)
-- **E-mail receipts** — HTML order confirmation e-mails with order summary and tracking status via Gmail SMTP
-- **Order history** — Full order history with line items and shipping details
+### 🛒 E-commerce Features
+- 🏪 **Category browsing** — 9 product categories with emoji navigation
+- 🎨 **Product variants** — Size, weight, volume, colour selectors with dynamic price adjustment
+- 🛍️ **Cart management** — Quantity controls (−/+), real-time badge count, variant info
+- 💳 **Checkout & payments** — UPI, Credit/Debit Card, Net Banking, and Cash on Delivery simulation
+- 📦 **Order tracking** — Visual timeline (Placed → Processing → Shipped → Delivered)
+- 📧 **E-mail receipts** — HTML order confirmation e-mails with order summary and tracking status via Gmail SMTP
+- 🗂️ **Order history** — Full order history with line items and shipping details
 
-### Auth & Access
-- **JWT authentication** — 7-day token expiry, role-based access control
-- **Role-based access** — Admin (full access) v/s Customer (no Analytics)
-- **Guest browsing** — Browse and search without an account
-- **Forgot password** — Secure token-based password reset via e-mail
+### 🔐 Auth & Access Features
+- 🔑 **JWT authentication** — 7-day token expiry, role-based access control
+- 👤 **Role-based access** — Admin (full access) v/s Customer (no Analytics)
+- 👀 **Guest browsing** — Browse and search without an account
+- 🔒 **Forgot password** — Secure token-based password reset via e-mail
 
 ---
 
